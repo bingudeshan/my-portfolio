@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "title": "Kitchen Kart App",
+        "description": "A comprehensive mobile application designed for kitchen management. Focused on system design relative to user requirements and seamless team collaboration during development.",
+        "technologies": [
+            "Java",
+            "Android Studio",
+            "SQLite",
+            "XML"
+        ],
+        "githubUrl": "https://github.com/yourusername/kitchen-kart",
+        "liveUrl": "",
+        "keyFeatures": [
+            "User-friendly interface for managing kitchen inventory",
+            "Real-time synchronization across devices",
+            "Recipe management with ingredient tracking",
+            "Shopping list generation based on inventory"
+        ],
+        "codeSnippet": {
+            "language": "java",
+            "code": "public class InventoryManager {\n    private DatabaseHelper dbHelper;\n    \n    public void addItem(Item item) {\n        SQLiteDatabase db = dbHelper.getWritableDatabase();\n        ContentValues values = new ContentValues();\n        values.put(\"name\", item.getName());\n        values.put(\"quantity\", item.getQuantity());\n        values.put(\"category\", item.getCategory());\n        \n        db.insert(\"inventory\", null, values);\n        db.close();\n    }\n    \n    public List<Item> getAllItems() {\n        List<Item> items = new ArrayList<>();\n        SQLiteDatabase db = dbHelper.getReadableDatabase();\n        Cursor cursor = db.query(\"inventory\", null, null, null, null, null, \"name ASC\");\n        \n        while (cursor.moveToNext()) {\n            items.add(new Item(\n                cursor.getString(cursor.getColumnIndex(\"name\")),\n                cursor.getInt(cursor.getColumnIndex(\"quantity\")),\n                cursor.getString(cursor.getColumnIndex(\"category\"))\n            ));\n        }\n        cursor.close();\n        return items;\n    }\n}",
+            "description": "Core inventory management logic with SQLite database operations"
+        }
+    }
+]

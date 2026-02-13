@@ -1,0 +1,122 @@
+﻿
+> portfolio-app@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 1459 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 3.45s
+At C:\Program 
+Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE $NPM_CLI_JS 
+$args
++   ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo          
+    : NotSpecified: ([31m  
+  Γ£ù[39m Build failed i   
+ n 3.45s:String) [], Rem    
+oteException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+[31merror during build:
+[31msrc/components/ProjectC
+ard.jsx (4:9): "SiJava" is 
+not exported by "node_module
+s/react-icons/si/index.mjs",
+ imported by "src/components
+/ProjectCard.jsx".[31m
+file: [36mC:/Users/Bingu/De
+sktop/Deshan Hettiarchchi 
+Web page/portfolio-app/src/c
+omponents/ProjectCard.jsx:4:
+9[31m
+[33m
+2: import { motion, 
+AnimatePresence } from 
+'framer-motion';
+3: import { FaGithub, 
+FaExternalLinkAlt, FaCode, 
+FaTimes } from 
+'react-icons/fa';
+4: import { SiJava, 
+SiPython, SiJavascript, 
+SiReact, SiNodedotjs, 
+SiHtml5, SiCss3, SiMongodb, 
+SiMysql, SiPostgresql, 
+SiA...
+            ^
+5: import { Prism as 
+SyntaxHighlighter } from 
+'react-syntax-highlighter';
+6: import { vscDarkPlus } 
+from 'react-syntax-highlight
+er/dist/esm/styles/prism';
+[31m
+    at getRollupError (file:
+///C:/Users/Bingu/Desktop/De
+shan%20Hettiarchchi%20Web%20
+page/portfolio-app/node_modu
+les/rollup/dist/es/shared/pa
+rseAst.js:402:41)
+    at error (file:///C:/Use
+rs/Bingu/Desktop/Deshan%20He
+ttiarchchi%20Web%20page/port
+folio-app/node_modules/rollu
+p/dist/es/shared/parseAst.js
+:398:42)
+    at Module.error (file://
+/C:/Users/Bingu/Desktop/Desh
+an%20Hettiarchchi%20Web%20pa
+ge/portfolio-app/node_module
+s/rollup/dist/es/shared/node
+-entry.js:17040:16)
+    at Module.traceVariable 
+(file:///C:/Users/Bingu/Desk
+top/Deshan%20Hettiarchchi%20
+Web%20page/portfolio-app/nod
+e_modules/rollup/dist/es/sha
+red/node-entry.js:17452:29)
+    at 
+ModuleScope.findVariable (fi
+le:///C:/Users/Bingu/Desktop
+/Deshan%20Hettiarchchi%20Web
+%20page/portfolio-app/node_m
+odules/rollup/dist/es/shared
+/node-entry.js:15070:39)
+    at Identifier.bind (file
+:///C:/Users/Bingu/Desktop/D
+eshan%20Hettiarchchi%20Web%2
+0page/portfolio-app/node_mod
+ules/rollup/dist/es/shared/n
+ode-entry.js:5447:40)
+    at Property.bind (file:/
+//C:/Users/Bingu/Desktop/Des
+han%20Hettiarchchi%20Web%20p
+age/portfolio-app/node_modul
+es/rollup/dist/es/shared/nod
+e-entry.js:2829:23)
+    at 
+ObjectExpression.bind (file:
+///C:/Users/Bingu/Desktop/De
+shan%20Hettiarchchi%20Web%20
+page/portfolio-app/node_modu
+les/rollup/dist/es/shared/no
+de-entry.js:2825:28)
+    at 
+VariableDeclarator.bind (fil
+e:///C:/Users/Bingu/Desktop/
+Deshan%20Hettiarchchi%20Web%
+20page/portfolio-app/node_mo
+dules/rollup/dist/es/shared/
+node-entry.js:2829:23)
+    at 
+VariableDeclaration.bind (fi
+le:///C:/Users/Bingu/Desktop
+/Deshan%20Hettiarchchi%20Web
+%20page/portfolio-app/node_m
+odules/rollup/dist/es/shared
+/node-entry.js:2825:28)[39m

@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "date": "2026-02-08",
+        "title": "Understanding Newton's Second Law",
+        "content": "Newton's Second Law of Motion states that the force acting on an object is equal to the mass of that object times its acceleration. \n\nFormula: **F = ma**\n\nWhere:\n- **F** is the net force applied\n- **m** is the mass of the object\n- **a** is the acceleration\n\nThis fundamental principle explains how the velocity of an object changes when it is subjected to an external force.",
+        "tags": [
+            "Mechanics",
+            "Classical Physics"
+        ]
+    },
+    {
+        "id": 2,
+        "date": "2026-02-07",
+        "title": "The Beauty of Thermodynamics",
+        "content": "The First Law of Thermodynamics, often known as the Law of Conservation of Energy, states that energy cannot be created or destroyed in an isolated system.\n\n$$\\Delta U = Q - W$$\n\nHere, $\\Delta U$ is the change in internal energy, $Q$ is the heat added to the system, and $W$ is the work done by the system.",
+        "tags": [
+            "Thermodynamics",
+            "Energy"
+        ]
+    },
+    {
+        "id": 3,
+        "date": "2026-02-06",
+        "title": "Quantum Entanglement Explained",
+        "content": "Quantum entanglement is a phenomenon where a pair of particles interact in such a way that the quantum state of each particle cannot be described independently of the state of the other.\n\nAlbert Einstein famously referred to this as 'spooky action at a distance'.",
+        "tags": [
+            "Quantum Physics",
+            "Advanced"
+        ]
+    }
+]

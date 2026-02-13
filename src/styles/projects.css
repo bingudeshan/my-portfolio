@@ -1,0 +1,438 @@
+/* ===========================
+   PROJECTS PAGE STYLES
+   =========================== */
+
+.projects-page {
+    width: 100%;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+/* ===========================
+   PROJECT CARD STYLES
+   =========================== */
+
+.project-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.project-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 12px 40px -10px rgba(56, 189, 248, 0.3);
+    transform: translateY(-8px);
+}
+
+/* Project Header */
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.project-title {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+}
+
+.project-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.project-link-icon {
+    color: var(--accent-blue);
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(56, 189, 248, 0.1);
+}
+
+.project-link-icon:hover {
+    color: var(--text-primary);
+    background: var(--accent-blue);
+    transform: scale(1.1);
+}
+
+/* Description */
+.project-description {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Tech Stack */
+.tech-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tech-stack-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.tech-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.tech-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.tech-icon-wrapper:hover {
+    background: rgba(56, 189, 248, 0.2);
+    transform: translateY(-2px);
+}
+
+.tech-icon {
+    font-size: 1.5rem;
+    color: var(--accent-blue);
+}
+
+.tech-text {
+    font-size: 0.85rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+    padding: 0 0.25rem;
+}
+
+/* Key Features */
+.key-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.features-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.features-list li {
+    color: var(--text-secondary);
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.features-list li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent-blue);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Project Actions */
+.project-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    flex-wrap: wrap;
+}
+
+.project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.project-btn.primary {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.project-btn.primary:hover {
+    background: var(--accent-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -5px rgba(56, 189, 248, 0.4);
+}
+
+.project-btn.secondary {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent-blue);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.project-btn.secondary:hover {
+    background: rgba(56, 189, 248, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ===========================
+   CODE SNIPPET MODAL
+   =========================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 2rem;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-snippet-modal {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff4444;
+}
+
+.modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.snippet-description {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* ===========================
+   PROJECT FORM STYLES
+   =========================== */
+
+.project-form-container {
+    width: 100%;
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.project-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.1);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.project-list-item:hover {
+    background: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.project-list-item h4 {
+    margin: 0 0 0.25rem 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.edit-btn {
+    padding: 0.5rem 1rem;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+    background: var(--accent-purple);
+    transform: translateY(-2px);
+}
+
+.delete-btn {
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff4444;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 68, 68, 0.2);
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.code-input {
+    font-family: 'Courier New', monospace;
+    tab-size: 2;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .project-card {
+        padding: 1.5rem;
+    }
+
+    .project-title {
+        font-size: 1.25rem;
+    }
+
+    .project-actions {
+        flex-direction: column;
+    }
+
+    .project-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .modal-overlay {
+        padding: 1rem;
+    }
+
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .project-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .project-list-item>div:last-child {
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        flex: 1;
+    }
+}
