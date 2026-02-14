@@ -131,7 +131,7 @@ const ExperienceForm = () => {
 
                     <div className="form-group">
                         <label className="form-label">Title / Role</label>
-                        <input name="title" value={formData.title} onChange={handleChange} className="form-input" placeholder="e.g. Software Engineer" requiredComp />
+                        <input name="title" value={formData.title} onChange={handleChange} className="form-input" placeholder="e.g. Software Engineer" required />
                     </div>
 
                     {formData.type === 'work' ? (

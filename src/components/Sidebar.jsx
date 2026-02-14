@@ -17,7 +17,8 @@ const Sidebar = () => {
         name: 'Portfolio Platform',
         bio: 'Build your identity',
         photoURL: defaultAvatar,
-        email: ''
+        email: '',
+        facebook: ''
     });
 
     // Platform Owner Email (Change this to your actual email)
@@ -34,6 +35,7 @@ const Sidebar = () => {
                         photoURL: data.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
+                        facebook: data.facebook,
                         email: data.email || ''
                     });
                     return;
@@ -49,6 +51,7 @@ const Sidebar = () => {
                         photoURL: data.photoURL || user.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
+                        facebook: data.facebook,
                         email: data.email || user.email || ''
                     });
                 } else {

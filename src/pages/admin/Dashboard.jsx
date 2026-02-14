@@ -293,16 +293,19 @@ const Dashboard = () => {
                                         className="form-input"
                                     />
                                 </div>
+
+                                <div style={{ marginTop: '2.5rem' }}>
+                                    <button
+                                        type="submit"
+                                        className="submit-btn"
+                                        disabled={saving}
+                                        style={{ background: 'var(--accent-purple)', width: 'auto', padding: '1rem 2rem' }}
+                                    >
+                                        <FaSave /> {saving ? 'Syncing...' : 'Save All Changes'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="submit-btn"
-                            style={{ background: 'var(--accent-purple)', marginTop: '2rem' }}
-                        >
-                            <FaSave style={{ marginRight: '0.5rem' }} /> {saving ? 'Saving...' : 'Save & Sync Cloud'}
-                        </button>
                     </form>
                 </div>
             )}
