@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaSave, FaEye } from 'react-icons/fa';
@@ -6,13 +5,17 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import { useAuth } from '../context/AuthContext';
+import { addPost } from '../services/dbService';
 
 const CreatePost = () => {
+    const { user } = useAuth();
     const [title, setTitle] = useState('');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [content, setContent] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [alert, setAlert] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -25,28 +28,32 @@ const CreatePost = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user) return;
+        setIsSaving(true);
 
         try {
             const newPost = {
-                id: Date.now(),
+                uid: user.uid,
                 title,
                 date,
                 content,
                 image: imageUrl,
-                tags: [] // Can be extended later
+                tags: []
             };
 
-            const existingPosts = JSON.parse(localStorage.getItem('physicsPosts')) || [];
-            localStorage.setItem('physicsPosts', JSON.stringify([newPost, ...existingPosts]));
+            await addPost(newPost);
 
             setTitle('');
             setContent('');
             setImageUrl('');
-            setAlert({ type: 'success', message: 'Post published successfully!' });
+            setAlert({ type: 'success', message: 'Post published to your portfolio!' });
         } catch (error) {
-            setAlert({ type: 'error', message: 'Failed to publish post (Local Storage may be full).' });
+            console.error(error);
+            setAlert({ type: 'error', message: 'Failed to publish post. Please check your connection.' });
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -116,8 +123,9 @@ const CreatePost = () => {
                     />
                 </div>
 
-                <button type="submit" className="submit-btn">
-                    <FaSave style={{ marginRight: '0.5rem' }} /> Publish Post
+                <button type="submit" className="submit-btn" disabled={isSaving}>
+                    <FaSave style={{ marginRight: '0.5rem' }} />
+                    {isSaving ? 'Publishing...' : 'Publish Post'}
                 </button>
             </form>
 
