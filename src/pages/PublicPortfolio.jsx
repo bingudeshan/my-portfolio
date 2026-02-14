@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { getProfileByUsername, getUserProjects, getUserPosts } from '../services/dbService';
+import { getProfileByUsername } from '../services/dbService';
 import Home from './Home';
 import Projects from './Projects';
 import Blog from './Blog';
@@ -31,6 +31,9 @@ const PublicPortfolio = () => {
     return (
         <div className="public-portfolio">
             <Home publicUser={profile} />
+            <div style={{ padding: '0 2rem' }}>
+                <Blog publicUser={profile} />
+            </div>
             <Projects publicUid={profile.id} />
         </div>
     );

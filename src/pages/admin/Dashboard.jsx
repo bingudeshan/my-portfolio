@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CreatePost from '../CreatePost';
 import ProjectForm from '../../components/ProjectForm';
 import ExperienceForm from '../../components/ExperienceForm';
@@ -12,6 +12,7 @@ import { getUserProfile, saveUserProfile } from '../../services/dbService';
 const Dashboard = () => {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState('profile');
     const [saving, setSaving] = useState(false);
     // ... rest of component ...
@@ -33,6 +34,15 @@ const Dashboard = () => {
             navigate('/login');
         }
     }, [user, authLoading, navigate]);
+
+    // Added: Sync active tab with URL query param
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const tab = params.get('tab');
+        if (tab && ['profile', 'experience', 'projects', 'createPost'].includes(tab)) {
+            setActiveTab(tab);
+        }
+    }, [location.search]);
 
     useEffect(() => {
         const fetchProfile = async () => {

@@ -22,7 +22,7 @@ export const saveUserProfile = async (uid, profileData) => {
 export const getUserProfile = async (uid) => {
     const userRef = doc(db, 'users', uid);
     const snap = await getDoc(userRef);
-    return snap.exists() ? snap.data() : null;
+    return snap.exists() ? { ...snap.data(), id: snap.id } : null;
 };
 
 export const getProfileByUsername = async (username) => {
@@ -30,7 +30,7 @@ export const getProfileByUsername = async (username) => {
     const q = query(usersRef, where('username', '==', username));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
-        return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+        return { ...querySnapshot.docs[0].data(), id: querySnapshot.docs[0].id };
     }
     return null;
 };
@@ -40,7 +40,7 @@ export const getUserProjects = async (uid) => {
     const projectsRef = collection(db, 'projects');
     const q = query(projectsRef, where('uid', '==', uid));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 };
 
 export const addProject = async (projectData) => {
@@ -62,9 +62,14 @@ export const deleteProject = async (projectId) => {
 // Posts / Blog
 export const getUserPosts = async (uid) => {
     const postsRef = collection(db, 'posts');
-    const q = query(postsRef, where('uid', '==', uid));
+    let q;
+    if (uid) {
+        q = query(postsRef, where('uid', '==', uid));
+    } else {
+        q = query(postsRef);
+    }
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 };
 
 export const addPost = async (postData) => {
@@ -73,12 +78,34 @@ export const addPost = async (postData) => {
     return docRef.id;
 };
 
+export const getPostById = async (postId) => {
+    const cleanId = postId?.trim();
+    if (!cleanId) return null;
+    const postRef = doc(db, 'posts', cleanId);
+    const snap = await getDoc(postRef);
+    return snap.exists() ? { ...snap.data(), id: snap.id } : null;
+};
+
+export const updatePost = async (postId, postData) => {
+    const cleanId = postId?.trim();
+    if (!cleanId) throw new Error("Invalid Post ID");
+    const postRef = doc(db, 'posts', cleanId);
+    await updateDoc(postRef, { ...postData, updatedAt: new Date().toISOString() });
+};
+
+export const deletePost = async (postId) => {
+    const cleanId = postId?.trim();
+    if (!cleanId) throw new Error("Invalid Post ID");
+    const postRef = doc(db, 'posts', cleanId);
+    await deleteDoc(postRef);
+};
+
 // Experience / Education
 export const getUserExperience = async (uid) => {
     const expRef = collection(db, 'experience');
     const q = query(expRef, where('uid', '==', uid));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 };
 
 export const addExperience = async (expData) => {
