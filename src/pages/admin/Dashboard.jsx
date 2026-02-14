@@ -123,32 +123,32 @@ const Dashboard = () => {
                 )}
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <div className="dashboard-tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', overflowX: 'auto', paddingBottom: '0.5rem', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
                 <button
                     onClick={() => setActiveTab('profile')}
                     className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`}
-                    style={{ background: activeTab === 'profile' ? 'var(--accent-purple)' : 'var(--bg-secondary)', border: 'none' }}
+                    style={{ background: activeTab === 'profile' ? 'var(--accent-purple)' : 'var(--bg-secondary)', border: 'none', flexShrink: 0 }}
                 >
                     <FaUserEdit /> Profile & Identity
                 </button>
                 <button
                     onClick={() => setActiveTab('experience')}
                     className={`nav-link ${activeTab === 'experience' ? 'active' : ''}`}
-                    style={{ background: activeTab === 'experience' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none' }}
+                    style={{ background: activeTab === 'experience' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none', flexShrink: 0 }}
                 >
                     <FaGraduationCap /> Experience & Education
                 </button>
                 <button
                     onClick={() => setActiveTab('projects')}
                     className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`}
-                    style={{ background: activeTab === 'projects' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none' }}
+                    style={{ background: activeTab === 'projects' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none', flexShrink: 0 }}
                 >
                     <FaProjectDiagram /> Manage Projects
                 </button>
                 <button
                     onClick={() => setActiveTab('createPost')}
                     className={`nav-link ${activeTab === 'createPost' ? 'active' : ''}`}
-                    style={{ background: activeTab === 'createPost' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none' }}
+                    style={{ background: activeTab === 'createPost' ? 'var(--accent-blue)' : 'var(--bg-secondary)', border: 'none', flexShrink: 0 }}
                 >
                     <FaPlusCircle /> Blog Posts
                 </button>
@@ -157,7 +157,7 @@ const Dashboard = () => {
             {activeTab === 'profile' && (
                 <div className="glass-panel" style={{ padding: '2rem' }}>
                     <form className="create-post-form" onSubmit={(e) => { e.preventDefault(); saveProfileData(); }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                        <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
                             <div>
                                 <h3 style={{ marginBottom: '1.5rem' }}>Basic Information</h3>
                                 <div className="form-group">
