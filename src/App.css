@@ -493,7 +493,28 @@ nav {
   }
 
   .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    /* Single column on mobile */
     gap: 1.5rem !important;
+  }
+
+  .dashboard-tabs {
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+  }
+
+  .dashboard-tabs::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+
+  .nav-link {
+    min-width: auto !important;
+    padding: 0.8rem 1.2rem !important;
+    font-size: 0.85rem !important;
   }
 
   .submit-btn {
