@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { FaHome, FaBlog, FaCode, FaBriefcase, FaUser, FaLinkedin, FaGithub, FaFacebook, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import defaultProfilePic from '../assets/profile.jpg';
+// import defaultProfilePic from '../assets/profile.jpg';
+const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff";
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../services/dbService';
 
@@ -13,7 +14,7 @@ const Sidebar = () => {
     const [profileData, setProfileData] = useState({
         name: 'Portfolio Platform',
         bio: 'Build your identity',
-        photoURL: defaultProfilePic
+        photoURL: defaultAvatar
     });
 
     useEffect(() => {
@@ -24,7 +25,7 @@ const Sidebar = () => {
                     setProfileData({
                         name: data.name || user.displayName || 'New User',
                         bio: data.tagline || data.bio || 'Setup your profile',
-                        photoURL: data.photoURL || user.photoURL || defaultProfilePic,
+                        photoURL: data.photoURL || user.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
                         facebook: data.facebook
@@ -33,14 +34,14 @@ const Sidebar = () => {
                     setProfileData({
                         name: user.displayName || 'New User',
                         bio: 'Click Dashboard to setup',
-                        photoURL: user.photoURL || defaultProfilePic
+                        photoURL: user.photoURL || defaultAvatar
                     });
                 }
             } else {
                 setProfileData({
                     name: 'Portfolio Platform',
                     bio: 'Share your work',
-                    photoURL: defaultProfilePic
+                    photoURL: defaultAvatar
                 });
             }
         };
