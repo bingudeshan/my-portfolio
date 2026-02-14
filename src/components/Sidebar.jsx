@@ -1,25 +1,46 @@
 
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { FaHome, FaBlog, FaCode, FaBriefcase, FaUser, FaLinkedin, FaGithub, FaFacebook, FaEnvelope, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 // import defaultProfilePic from '../assets/profile.jpg';
 const defaultAvatar = "https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff";
 import { useAuth } from '../context/AuthContext';
-import { getUserProfile } from '../services/dbService';
+import { getUserProfile, getProfileByUsername } from '../services/dbService';
 
 const Sidebar = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const { username } = useParams(); // Detect if on /:username
     const [isOpen, setIsOpen] = useState(false);
     const [profileData, setProfileData] = useState({
         name: 'Portfolio Platform',
         bio: 'Build your identity',
-        photoURL: defaultAvatar
+        photoURL: defaultAvatar,
+        contactEmail: 'support@portfolio.io',
+        contactName: 'Support'
     });
 
     useEffect(() => {
         const fetchProfile = async () => {
+            // Priority 1: Profile from username in URL (Public View)
+            if (username) {
+                const data = await getProfileByUsername(username);
+                if (data) {
+                    setProfileData({
+                        name: data.name || 'Professional Developer',
+                        bio: data.tagline || data.bio || 'Share your work',
+                        photoURL: data.photoURL || defaultAvatar,
+                        linkedin: data.linkedin,
+                        github: data.github,
+                        contactEmail: data.email || 'support@portfolio.io',
+                        contactName: data.name ? `Contact ${data.name.split(' ')[0]}` : 'Contact'
+                    });
+                    return;
+                }
+            }
+
+            // Priority 2: Logged in user's profile
             if (user) {
                 const data = await getUserProfile(user.uid);
                 if (data) {
@@ -29,25 +50,31 @@ const Sidebar = () => {
                         photoURL: data.photoURL || user.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
-                        facebook: data.facebook
+                        contactEmail: data.email || user.email || 'support@portfolio.io',
+                        contactName: 'Support'
                     });
                 } else {
                     setProfileData({
                         name: user.displayName || 'New User',
                         bio: 'Click Dashboard to setup',
-                        photoURL: user.photoURL || defaultAvatar
+                        photoURL: user.photoURL || defaultAvatar,
+                        contactEmail: user.email || 'support@portfolio.io',
+                        contactName: 'Support'
                     });
                 }
             } else {
+                // Priority 3: Default Platform view
                 setProfileData({
                     name: 'Portfolio Platform',
                     bio: 'Share your work',
-                    photoURL: defaultAvatar
+                    photoURL: defaultAvatar,
+                    contactEmail: 'support@portfolio.io',
+                    contactName: 'Support'
                 });
             }
         };
         fetchProfile();
-    }, [user]);
+    }, [user, username]);
 
     const handleLogout = async () => {
         await logout();
@@ -153,8 +180,8 @@ const Sidebar = () => {
                                 )}
                             </div>
 
-                            <a href="mailto:support@portfolio.io" className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem' }}>
-                                <FaEnvelope /> Support
+                            <a href={`mailto:${profileData.contactEmail}`} className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem', gap: '0.5rem' }}>
+                                <FaEnvelope /> {profileData.contactName}
                             </a>
 
                             {!user && (

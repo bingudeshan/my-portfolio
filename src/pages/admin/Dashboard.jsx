@@ -24,7 +24,8 @@ const Dashboard = () => {
         photoURL: '',
         linkedin: '',
         github: '',
-        facebook: ''
+        facebook: '',
+        email: ''
     });
 
     useEffect(() => {
@@ -47,7 +48,8 @@ const Dashboard = () => {
                         photoURL: data.photoURL || user.photoURL || '',
                         linkedin: data.linkedin || '',
                         github: data.github || '',
-                        facebook: data.facebook || ''
+                        facebook: data.facebook || '',
+                        email: data.email || user.email || ''
                     });
                 } else {
                     // Initialize with basic user info
@@ -55,7 +57,8 @@ const Dashboard = () => {
                         ...prev,
                         name: user.displayName || '',
                         username: user.email?.split('@')[0] || '',
-                        photoURL: user.photoURL || ''
+                        photoURL: user.photoURL || '',
+                        email: user.email || ''
                     }));
                 }
             }
@@ -167,6 +170,17 @@ const Dashboard = () => {
                                         value={profile.name}
                                         onChange={handleProfileChange}
                                         className="form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Contact Email (for visitors)</label>
+                                    <input
+                                        name="email"
+                                        value={profile.email}
+                                        onChange={handleProfileChange}
+                                        className="form-input"
+                                        placeholder="hello@example.com"
                                         required
                                     />
                                 </div>

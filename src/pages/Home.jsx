@@ -89,9 +89,14 @@ const Home = ({ publicUser }) => {
 
             <div className="intro-text">
                 <p>{bio}</p>
-                <div style={{ marginTop: '3rem', display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
+                <div style={{ marginTop: '3rem', display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <a href="/projects" className="cta-button primary">View Projects</a>
                     <a href={githubLink} target="_blank" rel="noopener noreferrer" className="cta-button secondary">GitHub Profile</a>
+                    {profile?.email && (
+                        <a href={`mailto:${profile.email}`} className="cta-button secondary" style={{ borderColor: 'var(--accent-purple)', color: 'var(--accent-purple)' }}>
+                            Contact Me
+                        </a>
+                    )}
                 </div>
             </div>
         </motion.div>
