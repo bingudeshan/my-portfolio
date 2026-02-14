@@ -11,19 +11,20 @@ import { getUserProfile, getProfileByUsername } from '../services/dbService';
 const Sidebar = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const { username } = useParams(); // Detect if on /:username
+    const { username } = useParams();
     const [isOpen, setIsOpen] = useState(false);
     const [profileData, setProfileData] = useState({
         name: 'Portfolio Platform',
         bio: 'Build your identity',
         photoURL: defaultAvatar,
-        contactEmail: 'support@portfolio.io',
-        contactName: 'Support'
+        email: ''
     });
+
+    // Platform Owner Email (Change this to your actual email)
+    const SUPPORT_EMAIL = "deshanhettiarchchi@gmail.com";
 
     useEffect(() => {
         const fetchProfile = async () => {
-            // Priority 1: Profile from username in URL (Public View)
             if (username) {
                 const data = await getProfileByUsername(username);
                 if (data) {
@@ -33,14 +34,12 @@ const Sidebar = () => {
                         photoURL: data.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
-                        contactEmail: data.email || 'support@portfolio.io',
-                        contactName: data.name ? `Contact ${data.name.split(' ')[0]}` : 'Contact'
+                        email: data.email || ''
                     });
                     return;
                 }
             }
 
-            // Priority 2: Logged in user's profile
             if (user) {
                 const data = await getUserProfile(user.uid);
                 if (data) {
@@ -50,26 +49,22 @@ const Sidebar = () => {
                         photoURL: data.photoURL || user.photoURL || defaultAvatar,
                         linkedin: data.linkedin,
                         github: data.github,
-                        contactEmail: data.email || user.email || 'support@portfolio.io',
-                        contactName: 'Support'
+                        email: data.email || user.email || ''
                     });
                 } else {
                     setProfileData({
                         name: user.displayName || 'New User',
                         bio: 'Click Dashboard to setup',
                         photoURL: user.photoURL || defaultAvatar,
-                        contactEmail: user.email || 'support@portfolio.io',
-                        contactName: 'Support'
+                        email: user.email || ''
                     });
                 }
             } else {
-                // Priority 3: Default Platform view
                 setProfileData({
                     name: 'Portfolio Platform',
                     bio: 'Share your work',
                     photoURL: defaultAvatar,
-                    contactEmail: 'support@portfolio.io',
-                    contactName: 'Support'
+                    email: ''
                 });
             }
         };
@@ -180,8 +175,14 @@ const Sidebar = () => {
                                 )}
                             </div>
 
-                            <a href={`mailto:${profileData.contactEmail}`} className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem', gap: '0.5rem' }}>
-                                <FaEnvelope /> {profileData.contactName}
+                            {username && profileData.email && (
+                                <a href={`mailto:${profileData.email}`} className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-purple)', color: 'white', marginBottom: '0.5rem', gap: '0.5rem' }}>
+                                    <FaEnvelope /> {profileData.name ? `Contact ${profileData.name.split(' ')[0]}` : 'Contact Developer'}
+                                </a>
+                            )}
+
+                            <a href={`mailto:${SUPPORT_EMAIL}`} className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem', gap: '0.5rem' }}>
+                                <FaEnvelope /> Platform Support
                             </a>
 
                             {!user && (
