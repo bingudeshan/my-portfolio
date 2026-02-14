@@ -6,14 +6,10 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { motion } from 'framer-motion';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { getUserPosts, getProfileByUsername } from '../services/dbService';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
 
 const Blog = ({ publicUser }) => {
     const { username } = useParams();
-    const { user } = useAuth();
     const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,25 +19,20 @@ const Blog = ({ publicUser }) => {
         const fetchPosts = async () => {
             setLoading(true);
             try {
-                let targetUid = null;
 
                 if (publicUser) {
-                    targetUid = publicUser.id;
+                    const data = await getUserPosts(publicUser.id);
+                    setPosts(data);
                 } else if (username) {
                     const profile = await getProfileByUsername(username);
-                    if (profile) targetUid = profile.id;
-                } else if (user) {
-                    targetUid = user.uid;
-                }
-
-                if (targetUid) {
-                    const data = await getUserPosts(targetUid);
-                    setPosts(data);
+                    if (profile) {
+                        const data = await getUserPosts(profile.id);
+                        setPosts(data);
+                    }
                 } else {
-                    const postsRef = collection(db, 'posts');
-                    const querySnapshot = await getDocs(postsRef);
-                    const allPosts = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                    setPosts(allPosts);
+                    // Global Feed - Fetch all posts regardless of current user login
+                    const data = await getUserPosts(null);
+                    setPosts(data);
                 }
             } catch (err) {
                 console.error("Failed to fetch posts", err);
@@ -49,7 +40,7 @@ const Blog = ({ publicUser }) => {
             setLoading(false);
         };
         fetchPosts();
-    }, [user, publicUser, username]);
+    }, [publicUser, username]);
 
     const filteredPosts = posts.filter(post =>
         post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,9 +65,9 @@ const Blog = ({ publicUser }) => {
             animate={{ opacity: 1 }}
         >
             <div style={{ marginBottom: '2.5rem' }}>
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Blog</h2>
+                <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Community Feed</h2>
                 <p style={{ color: 'var(--text-secondary)' }}>
-                    Insights, tutorials, and my latest thoughts.
+                    Insights, tutorials, and latest thoughts from the community.
                 </p>
             </div>
 
