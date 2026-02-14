@@ -63,6 +63,8 @@ export const deleteProject = async (projectId) => {
 export const getUserPosts = async (uid) => {
     const postsRef = collection(db, 'posts');
     let q;
+    // If UID is provided, fetch only for that user (Dashboard/Public Profile)
+    // If UID is null, fetch all (Main Blog)
     if (uid) {
         q = query(postsRef, where('uid', '==', uid));
     } else {
@@ -74,7 +76,11 @@ export const getUserPosts = async (uid) => {
 
 export const addPost = async (postData) => {
     const postsRef = collection(db, 'posts');
-    const docRef = await addDoc(postsRef, { ...postData, createdAt: new Date().toISOString() });
+    const docRef = await addDoc(postsRef, {
+        ...postData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    });
     return docRef.id;
 };
 

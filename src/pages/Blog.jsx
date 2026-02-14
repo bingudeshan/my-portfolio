@@ -109,15 +109,27 @@ const Blog = ({ publicUser }) => {
                             onClick={() => navigate(`/blog/${post.id}`)}
                             style={{ cursor: 'pointer', position: 'relative' }}
                         >
-                            {post.image && (
+                            {(post.image || post.imageUrl) && (
                                 <img
-                                    src={post.image}
+                                    src={post.image || post.imageUrl}
                                     alt={post.title}
                                     style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1.5rem' }}
                                 />
                             )}
                             <span className="card-date">{formatDate(post.createdAt || post.date)}</span>
                             <h3 className="card-title" style={{ fontSize: '1.4rem', marginTop: '0.5rem' }}>{post.title || 'Untitled Post'}</h3>
+
+                            {post.authorName && (
+                                <div
+                                    style={{ fontSize: '0.85rem', color: 'var(--accent-blue)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (post.authorUsername) navigate(`/${post.authorUsername}`);
+                                    }}
+                                >
+                                    By <span style={{ textDecoration: 'underline' }}>{post.authorName}</span>
+                                </div>
+                            )}
 
                             <div className="card-content" style={{ marginTop: '1rem' }}>
                                 <ReactMarkdown

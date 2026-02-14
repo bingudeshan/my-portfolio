@@ -105,8 +105,8 @@ const BlogPost = () => {
         );
     }
 
-    // Check if current user is owner of the post (allow if UID matches or if it's an old post with no UID)
-    const isOwner = user && (!post.uid || user.uid === post.uid);
+    // Strictly verify ownership based on UID
+    const isOwner = user && post.uid && user.uid === post.uid;
 
     const formatDate = (dateValue) => {
         if (!dateValue) return "No date";
@@ -150,9 +150,9 @@ const BlogPost = () => {
             </div>
 
             <article className="glass-panel" style={{ padding: '2rem', marginTop: '1rem' }}>
-                {post.image && (
+                {(post.image || post.imageUrl) && (
                     <img
-                        src={post.image}
+                        src={post.image || post.imageUrl}
                         alt={post.title}
                         className="post-hero-image"
                         style={{ width: '100%', borderRadius: '8px', marginBottom: '2rem', maxHeight: '500px', objectFit: 'cover' }}
@@ -161,6 +161,16 @@ const BlogPost = () => {
 
                 <header style={{ marginBottom: '2rem' }}>
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{post.title || 'Untitled Post'}</h1>
+
+                    {post.authorName && (
+                        <div
+                            style={{ marginBottom: '1rem', fontSize: '1rem', color: 'var(--accent-blue)', cursor: 'pointer', display: 'inline-block' }}
+                            onClick={() => post.authorUsername && navigate(`/${post.authorUsername}`)}
+                        >
+                            By <span style={{ textDecoration: 'underline' }}>{post.authorName}</span>
+                        </div>
+                    )}
+
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', color: 'var(--text-secondary)' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <FaCalendarAlt /> {formatDate(post.createdAt || post.date)}

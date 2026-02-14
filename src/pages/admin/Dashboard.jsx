@@ -324,7 +324,7 @@ const Dashboard = () => {
 
             {activeTab === 'projects' && <ProjectForm />}
 
-            {activeTab === 'createPost' && <CreatePost isAdmin={true} />}
+            {activeTab === 'createPost' && <CreatePost />}
         </motion.div>
     );
 };

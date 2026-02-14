@@ -6,10 +6,10 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { useAuth } from '../context/AuthContext';
-import { addPost, getUserPosts, updatePost, deletePost, getPostById } from '../services/dbService';
+import { addPost, getUserPosts, updatePost, deletePost, getPostById, getUserProfile } from '../services/dbService';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const CreatePost = ({ isAdmin }) => {
+const CreatePost = () => {
     const { user } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
@@ -24,20 +24,32 @@ const CreatePost = ({ isAdmin }) => {
     const [alert, setAlert] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [userProfile, setUserProfile] = useState(null);
 
     // Fetch posts for the user
     const fetchPosts = useCallback(async () => {
-        if (!user && !isAdmin) return;
+        if (!user) return;
         setLoading(true);
         try {
-            // If admin, fetch all posts. Otherwise, fetch only user posts.
-            const data = await getUserPosts(isAdmin ? null : user?.uid);
+            // Strictly fetch only current user's posts for the dashboard
+            const data = await getUserPosts(user.uid);
             setPosts(data.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date)));
         } catch (error) {
             console.error(error);
         }
         setLoading(false);
-    }, [user, isAdmin]);
+    }, [user]);
+
+    // Fetch user profile for author data
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (user) {
+                const profile = await getUserProfile(user.uid);
+                setUserProfile(profile);
+            }
+        };
+        fetchProfile();
+    }, [user]);
 
     useEffect(() => {
         fetchPosts();
@@ -121,6 +133,8 @@ const CreatePost = ({ isAdmin }) => {
         try {
             const postData = {
                 uid: user.uid,
+                authorName: userProfile?.name || user.displayName || 'Anonymous',
+                authorUsername: userProfile?.username || '',
                 title,
                 date,
                 content,
@@ -128,7 +142,14 @@ const CreatePost = ({ isAdmin }) => {
                 tags: tags.split(',').map(t => t.trim()).filter(t => t !== '')
             };
 
+            console.log("Submitting Post Data:", { ...postData, image: imageUrl ? `${imageUrl.substring(0, 50)}... (${(imageUrl.length / 1024).toFixed(1)} KB)` : 'none' });
+
             if (editingId) {
+                // Security check: ensure user owns the post before updating
+                const existingPost = await getPostById(editingId);
+                if (existingPost && existingPost.uid && existingPost.uid !== user.uid) {
+                    throw new Error("Permission Denied: You do not own this post.");
+                }
                 await updatePost(editingId, postData);
                 setAlert({ type: 'success', message: 'Post updated successfully!' });
             } else {
@@ -169,12 +190,21 @@ const CreatePost = ({ isAdmin }) => {
                 ) : (
                     <div className="projects-list">
                         {posts.map((post) => (
-                            <div key={post.id} className="project-list-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', borderBottom: '1px solid var(--border-color)' }}>
-                                <div>
-                                    <h4 style={{ margin: 0 }}>{post.title}</h4>
-                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0' }}>
-                                        {new Date(post.createdAt || post.date).toLocaleDateString()}
-                                    </p>
+                            <div key={post.id} className="project-list-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', borderBottom: '1px solid var(--border-color)', gap: '1rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                                    {(post.image || post.imageUrl) && (
+                                        <img
+                                            src={post.image || post.imageUrl}
+                                            alt="Post Thumb"
+                                            style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }}
+                                        />
+                                    )}
+                                    <div>
+                                        <h4 style={{ margin: 0 }}>{post.title}</h4>
+                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0' }}>
+                                            {new Date(post.createdAt || post.date).toLocaleDateString()}
+                                        </p>
+                                    </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                     <button onClick={() => navigate(`/blog/${post.id}`)} className="edit-btn" style={{ background: 'var(--accent-purple)', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
