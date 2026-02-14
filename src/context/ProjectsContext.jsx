@@ -1,5 +1,12 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import initialProjects from '../data/projects.json';
+import { useAuth } from './AuthContext';
+import {
+    getUserProjects,
+    addProject as dbAddProject,
+    updateProject as dbUpdateProject,
+    deleteProject as dbDeleteProject
+} from '../services/dbService';
 
 const ProjectsContext = createContext();
 
@@ -12,39 +19,44 @@ export const useProjects = () => {
 };
 
 export const ProjectsProvider = ({ children }) => {
-    const [projects, setProjects] = useState(() => {
-        const storedProjects = localStorage.getItem('projects');
-        if (storedProjects) {
-            try {
-                return JSON.parse(storedProjects);
-            } catch (error) {
-                console.error('Failed to parse projects from localStorage', error);
-                return initialProjects;
-            }
-        }
-        return initialProjects;
-    });
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
 
-    // Save projects to localStorage whenever they change
+    // Fetch projects from Firestore when user changes
     useEffect(() => {
-        if (projects.length > 0) {
-            localStorage.setItem('projects', JSON.stringify(projects));
-        }
-    }, [projects]);
-
-    const addProject = (project) => {
-        const newProject = {
-            ...project,
-            id: Date.now().toString(), // Generate unique ID
+        const fetchProjects = async () => {
+            if (user) {
+                setLoading(true);
+                try {
+                    const data = await getUserProjects(user.uid);
+                    setProjects(data);
+                } catch (error) {
+                    console.error('Failed to fetch projects', error);
+                }
+                setLoading(false);
+            } else {
+                setProjects([]);
+                setLoading(false);
+            }
         };
-        setProjects([...projects, newProject]);
+        fetchProjects();
+    }, [user]);
+
+    const addProject = async (project) => {
+        if (!user) return;
+        const newProject = { ...project, uid: user.uid };
+        const id = await dbAddProject(newProject);
+        setProjects([...projects, { ...newProject, id }]);
     };
 
-    const updateProject = (id, updatedProject) => {
+    const updateProject = async (id, updatedProject) => {
+        await dbUpdateProject(id, updatedProject);
         setProjects(projects.map(p => p.id === id ? { ...p, ...updatedProject } : p));
     };
 
-    const deleteProject = (id) => {
+    const deleteProject = async (id) => {
+        await dbDeleteProject(id);
         setProjects(projects.filter(p => p.id !== id));
     };
 
@@ -53,7 +65,8 @@ export const ProjectsProvider = ({ children }) => {
             projects,
             addProject,
             updateProject,
-            deleteProject
+            deleteProject,
+            loading
         }}>
             {children}
         </ProjectsContext.Provider>

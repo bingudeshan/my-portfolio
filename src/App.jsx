@@ -9,6 +9,7 @@ import Projects from './pages/Projects';
 import Experience from './pages/Experience';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
+import PublicPortfolio from './pages/PublicPortfolio';
 import { AuthProvider } from './context/AuthContext';
 import { ProjectsProvider } from './context/ProjectsContext';
 import './App.css';
@@ -28,6 +29,7 @@ function AnimatedRoutes() {
         <Route path="/experience" element={<Experience />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/:username" element={<PublicPortfolio />} />
       </Routes>
     </AnimatePresence>
   );

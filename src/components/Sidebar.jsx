@@ -1,105 +1,66 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { FaHome, FaAtom, FaCode, FaBriefcase, FaCamera, FaUser, FaLinkedin, FaGithub, FaFacebook, FaEnvelope } from 'react-icons/fa';
+
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { FaHome, FaBlog, FaCode, FaBriefcase, FaUser, FaLinkedin, FaGithub, FaFacebook, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import defaultProfilePic from '../assets/profile.jpg';
 import { useAuth } from '../context/AuthContext';
+import { getUserProfile } from '../services/dbService';
 
 const Sidebar = () => {
-    const { isAdmin } = useAuth();
-
-    // Initialize profile image directly from localStorage
-    const [profileImage, setProfileImage] = useState(() => {
-        try {
-            return localStorage.getItem('profileImage') || defaultProfilePic;
-        } catch (e) {
-            return defaultProfilePic;
-        }
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    const [profileData, setProfileData] = useState({
+        name: 'Portfolio Platform',
+        bio: 'Build your identity',
+        photoURL: defaultProfilePic
     });
 
-    // Initialize profile data directly from localStorage
-    const [profileData, setProfileData] = useState(() => {
-        try {
-            const savedProfile = localStorage.getItem('profileData');
-            return savedProfile ? JSON.parse(savedProfile) : {
-                name: 'Deshan Hettiarachchi',
-                bio: 'Physics & CS Undergraduate',
-                linkedin: '',
-                github: '',
-                facebook: ''
-            };
-        } catch (e) {
-            return {
-                name: 'Deshan Hettiarachchi',
-                bio: 'Physics & CS Undergraduate',
-                linkedin: '',
-                github: '',
-                facebook: ''
-            };
-        }
-    });
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (user) {
+                const data = await getUserProfile(user.uid);
+                if (data) {
+                    setProfileData({
+                        name: data.name || user.displayName || 'New User',
+                        bio: data.tagline || data.bio || 'Setup your profile',
+                        photoURL: data.photoURL || user.photoURL || defaultProfilePic,
+                        linkedin: data.linkedin,
+                        github: data.github,
+                        facebook: data.facebook
+                    });
+                } else {
+                    setProfileData({
+                        name: user.displayName || 'New User',
+                        bio: 'Click Dashboard to setup',
+                        photoURL: user.photoURL || defaultProfilePic
+                    });
+                }
+            } else {
+                setProfileData({
+                    name: 'Portfolio Platform',
+                    bio: 'Share your work',
+                    photoURL: defaultProfilePic
+                });
+            }
+        };
+        fetchProfile();
+    }, [user]);
 
-    // useEffect is no longer needed for loading initial data as we do it in useState initialization
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const img = new Image();
-                img.src = reader.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Set max dimensions for profile picture
-                    const maxWidth = 300;
-                    const maxHeight = 300;
-                    let width = img.width;
-                    let height = img.height;
-
-                    // Calculate new dimensions
-                    if (width > height) {
-                        if (width > maxWidth) {
-                            height *= maxWidth / width;
-                            width = maxWidth;
-                        }
-                    } else {
-                        if (height > maxHeight) {
-                            width *= maxHeight / height;
-                            height = maxHeight;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    // Convert to base64 with quality reduction
-                    const base64String = canvas.toDataURL('image/jpeg', 0.7);
-
-                    try {
-                        localStorage.setItem('profileImage', base64String);
-                        setProfileImage(base64String);
-                    } catch (error) {
-                        console.error("Error saving image to localStorage:", error);
-                        alert("Image is too large to save. Please choose a smaller image.");
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
     };
 
     const links = [
         { path: '/', name: 'Home', icon: <FaHome /> },
-        { path: '/blog', name: 'Physics Blog', icon: <FaAtom /> },
+        { path: '/blog', name: 'Blog', icon: <FaBlog /> },
         { path: '/projects', name: 'Projects', icon: <FaCode /> },
         { path: '/experience', name: 'Experience', icon: <FaBriefcase /> },
     ];
 
-    if (isAdmin) {
-        links.push({ path: '/dashboard', name: 'Admin Dashboard', icon: <FaUser /> });
+    if (user) {
+        links.push({ path: '/dashboard', name: 'My Dashboard', icon: <FaUser /> });
     }
 
     return (
@@ -111,28 +72,13 @@ const Sidebar = () => {
             <div className="profile-section">
                 <div className="profile-img-container">
                     <img
-                        src={profileImage}
+                        src={profileData.photoURL}
                         alt={profileData.name}
                         className="profile-img"
                     />
                 </div>
                 <h3>{profileData.name}</h3>
                 <p className="subtitle">{profileData.bio}</p>
-
-                {isAdmin && (
-                    <>
-                        <input
-                            type="file"
-                            id="profile-upload"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            style={{ display: 'none' }}
-                        />
-                        <label htmlFor="profile-upload" className="change-photo-btn">
-                            <FaCamera style={{ marginRight: '5px' }} /> Change Photo
-                        </label>
-                    </>
-                )}
             </div>
 
             <nav>
@@ -146,6 +92,13 @@ const Sidebar = () => {
                         {link.name}
                     </NavLink>
                 ))}
+
+                {user && (
+                    <button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left', color: '#ef4444' }}>
+                        <span className="icon"><FaSignOutAlt /></span>
+                        Logout
+                    </button>
+                )}
             </nav>
 
             <div className="sidebar-footer">
@@ -161,17 +114,17 @@ const Sidebar = () => {
                     )}
                 </div>
 
-                <a href="mailto:bingudeshan009@gmail.com" className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem' }}>
-                    <FaEnvelope /> Contact Me
+                <a href="mailto:support@portfolio.io" className="nav-link" style={{ justifyContent: 'center', background: 'var(--accent-blue)', color: 'white', marginBottom: '1rem' }}>
+                    <FaEnvelope /> Support
                 </a>
 
-                {!isAdmin && (
+                {!user && (
                     <NavLink to="/login" className="nav-link" style={{ justifyContent: 'center', fontSize: '0.8rem', opacity: 0.5 }}>
-                        Admin Login
+                        Join the Platform
                     </NavLink>
                 )}
 
-                <p>© 2026 Deshan H.</p>
+                <p>© 2026 Portfolio App</p>
             </div>
         </motion.div>
     );

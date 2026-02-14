@@ -3,45 +3,78 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub, FaShieldAlt } from 'react-icons/fa';
+import '../../styles/login.css';
 
 const Login = () => {
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const { loginWithGoogle, loginWithGithub } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (login(password)) {
+    const handleSocialLogin = async (loginMethod) => {
+        try {
+            setError('');
+            await loginMethod();
             navigate('/dashboard');
-        } else {
-            setError('Invalid Password. (Try "admin123")');
+        } catch (err) {
+            console.error(err);
+            setError('Authentication failed. Please try again or check your account.');
         }
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <div className="login-page">
+            <div className="background-blobs">
+                <div className="blob blob-1"></div>
+                <div className="blob blob-2"></div>
+                <div className="blob blob-3"></div>
+            </div>
+
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="glass-panel"
-                style={{ padding: '2rem', width: '100%', maxWidth: '400px' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="premium-login-card"
             >
-                <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Admin Login</h2>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="form-input"
-                            required
-                        />
-                    </div>
-                    {error && <p style={{ color: '#ef4444', fontSize: '0.9rem' }}>{error}</p>}
-                    <button type="submit" className="submit-btn" style={{ width: '100%' }}>Login</button>
-                </form>
+                <div className="login-logo">Deshan.</div>
+
+                <h2>Join the Platform</h2>
+                <p>Create, manage, and share your professional portfolio with the community.</p>
+
+                <div className="social-container">
+                    <button
+                        onClick={() => handleSocialLogin(loginWithGoogle)}
+                        className="premium-social-btn btn-google"
+                    >
+                        <FcGoogle size={24} />
+                        Continue with Google
+                    </button>
+
+                    <button
+                        onClick={() => handleSocialLogin(loginWithGithub)}
+                        className="premium-social-btn btn-github"
+                    >
+                        <FaGithub size={24} />
+                        Continue with GitHub
+                    </button>
+                </div>
+
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="error-message"
+                    >
+                        {error}
+                    </motion.div>
+                )}
+
+                <div className="login-footer">
+                    <span>
+                        <FaShieldAlt /> Secure Cloud Authentication
+                    </span>
+                </div>
             </motion.div>
         </div>
     );
