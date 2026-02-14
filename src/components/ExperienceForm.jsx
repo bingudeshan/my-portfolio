@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaSave, FaPlus, FaTimes, FaGraduationCap, FaBriefcase } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
-import { getUserExperience, addExperience, updateExperience, deleteExperience } from '../services/dbService';
+import { getUserExperience, addExperience, updateExperience, deleteExperience, getUserProfile } from '../services/dbService';
 
 const ExperienceForm = () => {
     const { user } = useAuth();
     const [experiences, setExperiences] = useState([]);
+    const [userProfile, setUserProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({
@@ -20,14 +21,22 @@ const ExperienceForm = () => {
     });
 
     useEffect(() => {
-        const fetchExperience = async () => {
+        const fetchExperienceAndProfile = async () => {
             if (user) {
-                const data = await getUserExperience(user.uid);
-                setExperiences(data);
+                try {
+                    const [expData, profileData] = await Promise.all([
+                        getUserExperience(user.uid),
+                        getUserProfile(user.uid)
+                    ]);
+                    setExperiences(expData);
+                    setUserProfile(profileData);
+                } catch (error) {
+                    console.error("Error fetching dashboard data:", error);
+                }
                 setLoading(false);
             }
         };
-        fetchExperience();
+        fetchExperienceAndProfile();
     }, [user]);
 
     const handleChange = (e) => {
@@ -39,7 +48,12 @@ const ExperienceForm = () => {
         if (!user) return;
 
         try {
-            const dataToSave = { ...formData, uid: user.uid };
+            const dataToSave = {
+                ...formData,
+                uid: user.uid,
+                authorName: userProfile?.name || user.displayName || 'Anonymous',
+                authorUsername: userProfile?.username || ''
+            };
             if (editingId) {
                 await updateExperience(editingId, dataToSave);
                 setExperiences(experiences.map(exp => exp.id === editingId ? { ...dataToSave, id: editingId } : exp));

@@ -109,7 +109,12 @@ export const deletePost = async (postId) => {
 // Experience / Education
 export const getUserExperience = async (uid) => {
     const expRef = collection(db, 'experience');
-    const q = query(expRef, where('uid', '==', uid));
+    let q;
+    if (uid) {
+        q = query(expRef, where('uid', '==', uid));
+    } else {
+        q = query(expRef);
+    }
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 };

@@ -5,6 +5,7 @@ import { getProfileByUsername } from '../services/dbService';
 import Home from './Home';
 import Projects from './Projects';
 import Blog from './Blog';
+import Experience from './Experience';
 import { ProjectsProvider } from '../context/ProjectsContext';
 
 const PublicPortfolio = () => {
@@ -32,6 +33,7 @@ const PublicPortfolio = () => {
         <div className="public-portfolio">
             <Home publicUser={profile} />
             <div style={{ padding: '0 2rem' }}>
+                <Experience publicUser={profile} />
                 <Blog publicUser={profile} />
             </div>
             <Projects publicUid={profile.id} />
